@@ -1,0 +1,57 @@
+Sub CriaEmail()
+
+'Application.ScreenUpdating = False 'no inicio da macro e depois True no final
+
+'On Error Resume Next
+
+Dim OutApp As Object
+Dim OutMail As Object
+
+Dim para As String
+Dim copia As String
+Dim oculta As String
+Dim assunto As String
+Dim corpo As String
+Dim anexo As String
+Dim envio As String
+
+Range("b65536").End(xlUp).Select
+Do While ActiveCell.Row > 1
+
+para = ActiveCell.Offset(0, 0)
+copia = ActiveCell.Offset(0, 1)
+copia2 = ActiveCell.Offset(0, 2)
+assunto = ActiveCell.Offset(0, 3)
+corpo = ActiveCell.Offset(0, 4)
+anexo = ActiveCell.Offset(0, 5)
+envio = Range("j1")
+ActiveCell.Offset(0, 7) = envio
+
+If ActiveCell <> "" Then
+
+Set OutApp = CreateObject("Outlook.Application")
+Set OutMail = OutApp.CreateItem(0)
+
+'Set AppOutk = New Outlook.Application                          'Define a aplicação do Outlook
+'Set MailOutk = AppOutk.CreateItem(olMailItem)                  'Define o objeto "Email" da Aplicação Outlook
+
+With OutMail
+    '.Display
+    .To = para                   'Coluna Para
+    .CC = copia                   'Coluna Com Cópia
+    .CC = copia               'Coluna Copia Oculta
+    .Subject = assunto              'Coluna Assunto
+    .Body = corpo                 'Coluna Corpo do Email
+    .Attachments.Add anexo        'Coluna Anexo
+    .Send
+End With
+
+End If
+
+ActiveCell.Offset(-1, 0).Select
+
+Loop
+
+MsgBox "Envio realizado", vbExclamation, "Indicadores no Excel"
+
+End Sub
